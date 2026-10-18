@@ -1,0 +1,180 @@
+﻿
+@import "tailwindcss";
+
+@theme {
+  --color-indigo-50: #F5EFE6;
+  --color-indigo-100: #F5EFE6;
+  --color-indigo-200: #E5DED4;
+  --color-indigo-300: #E5DED4;
+  --color-indigo-400: #997E67;
+  --color-indigo-500: #997E67;
+  --color-indigo-600: #664930;
+  --color-indigo-700: #664930;
+  --color-indigo-800: #664930;
+  --color-indigo-900: #664930;
+
+  --color-blue-50: #F5EFE6;
+  --color-blue-100: #F5EFE6;
+  --color-blue-200: #E5DED4;
+  --color-blue-300: #E5DED4;
+  --color-blue-400: #997E67;
+  --color-blue-500: #997E67;
+  --color-blue-600: #664930;
+  --color-blue-700: #664930;
+  --color-blue-800: #664930;
+  --color-blue-900: #664930;
+
+  --color-purple-50: #F5EFE6;
+  --color-purple-100: #F5EFE6;
+  --color-purple-200: #E5DED4;
+  --color-purple-300: #E5DED4;
+  --color-purple-400: #997E67;
+  --color-purple-500: #997E67;
+  --color-purple-600: #664930;
+  --color-purple-700: #664930;
+  --color-purple-800: #664930;
+  --color-purple-900: #664930;
+
+  --color-slate-50: #F5EFE6;
+  --color-slate-100: #F5EFE6;
+  --color-slate-200: #E5DED4;
+  --color-slate-300: #E5DED4;
+  --color-slate-400: #997E67;
+  --color-slate-500: #997E67;
+  --color-slate-600: #997E67;
+  --color-slate-700: #664930;
+  --color-slate-800: #664930;
+  --color-slate-900: #664930;
+
+  --color-gray-50: #F5EFE6;
+  --color-gray-100: #F5EFE6;
+  --color-gray-200: #E5DED4;
+  --color-gray-300: #E5DED4;
+  --color-gray-400: #997E67;
+  --color-gray-500: #997E67;
+  --color-gray-600: #997E67;
+  --color-gray-700: #664930;
+  --color-gray-800: #664930;
+  --color-gray-900: #664930;
+
+  --color-amber-50: #F5EFE6;
+  --color-amber-100: #F5EFE6;
+  --color-amber-200: #E5DED4;
+  --color-amber-300: #E5DED4;
+  --color-amber-400: #997E67;
+  --color-amber-500: #997E67;
+  --color-amber-600: #664930;
+  --color-amber-700: #664930;
+  --color-amber-800: #664930;
+  --color-amber-900: #664930;
+
+  --color-orange-50: #F5EFE6;
+  --color-orange-100: #F5EFE6;
+  --color-orange-200: #E5DED4;
+  --color-orange-300: #E5DED4;
+  --color-orange-400: #997E67;
+  --color-orange-500: #997E67;
+  --color-orange-600: #664930;
+  --color-orange-700: #664930;
+  --color-orange-800: #664930;
+  --color-orange-900: #664930;
+
+  --color-green-50: #F5EFE6;
+  --color-green-100: #F5EFE6;
+  --color-green-200: #E5DED4;
+  --color-green-300: #E5DED4;
+  --color-green-400: #997E67;
+  --color-green-500: #997E67;
+  --color-green-600: #664930;
+  --color-green-700: #664930;
+  --color-green-800: #664930;
+  --color-green-900: #664930;
+
+  /* Emerald colors */
+  --color-emerald-50: #F5EFE6;
+  --color-emerald-100: #F5EFE6;
+  --color-emerald-200: #E5DED4;
+  --color-emerald-300: #E5DED4;
+  --color-emerald-400: #997E67;
+  --color-emerald-500: #997E67;
+  --color-emerald-600: #664930;
+  --color-emerald-700: #664930;
+  --color-emerald-800: #664930;
+  --color-emerald-900: #664930;
+
+  --color-red-50: #F5EFE6;
+  --color-red-100: #F5EFE6;
+  --color-red-200: #E5DED4;
+  --color-red-300: #E5DED4;
+  --color-red-400: #997E67;
+  --color-red-500: #997E67;
+  --color-red-600: #664930;
+  --color-red-700: #664930;
+  --color-red-800: #664930;
+  --color-red-900: #664930;
+}
+
+:root {
+  --app-background: #F5EFE6;
+  --app-card: #FFFFFF;
+  --app-border: #E5DED4;
+  --app-accent: #997E67;
+  --app-text: #664930;
+  --app-primary: #664930;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    min-height: 100%;
+    background-color: var(--app-background);
+    color: var(--app-text);
+  }
+
+  body {
+    margin: 0;
+    font-family: sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--app-border);
+    color: var(--app-text);
+  }
+
+  input,
+  select,
+  textarea {
+    color: var(--app-text);
+    border-color: var(--app-border);
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline-color: var(--app-accent);
+  }
+
+  a {
+    color: var(--app-primary);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--app-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--app-accent);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--app-primary);
+}

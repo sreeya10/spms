@@ -1,0 +1,54 @@
+﻿# Environment variables and secrets
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Frontend build output
+dist/
+**/dist/
+build/
+**/build/
+
+# Python
+.venv/
+venv/
+**/.venv/
+**/venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Logs and temporary files
+*.log
+logs/
+tmp/
+temp/
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local databases and uploaded runtime data
+*.sqlite
+*.sqlite3
+uploads/
+server/.data/
+**/.data/
+
+# Temporary backup folders
+client/aurora-safety-20261018-211437/
+client/theme-backup-20261018-204500/
+*-backup*
+*-safety*
+**/*-backup*
+**/*-safety*
