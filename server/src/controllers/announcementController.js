@@ -30,6 +30,23 @@ export const createAnnouncement = async (req, res) => {
     const scope = targetScope || 'all';
     const dept = targetDepartment || (scope === 'department' ? req.user.department : null);
 
+    if (scope === 'project' && targetProjectId) {
+      const proj = projectsStore.findById(targetProjectId);
+      if (!proj) {
+        return res.status(404).json({ success: false, message: 'Target project not found.' });
+      }
+      if (req.user.role === 'faculty') {
+        const isSupervisor = proj.facultySupervisorId === req.user.id;
+        const isSameDept = proj.department === req.user.department;
+        if (!isSupervisor && !isSameDept) {
+          return res.status(403).json({
+            success: false,
+            message: 'Unauthorized: You can only announce to projects you supervise or within your department.'
+          });
+        }
+      }
+    }
+
     const announcement = announcementsStore.create({
       authorId: req.user.id,
       authorName: req.user.name,
@@ -48,9 +65,12 @@ export const createAnnouncement = async (req, res) => {
     let targetUsers = [];
 
     if (scope === 'project' && targetProjectId) {
+      const proj = projectsStore.findById(targetProjectId);
+      const recipientIds = new Set();
+      if (proj && proj.leaderId) recipientIds.add(proj.leaderId);
       const members = teamMembersStore.find({ projectId: targetProjectId });
-      const memberUserIds = members.map(m => m.userId);
-      targetUsers = usersStore.find().filter(u => memberUserIds.includes(u._id));
+      members.forEach(m => { if (m.userId) recipientIds.add(m.userId); });
+      targetUsers = usersStore.find().filter(u => recipientIds.has(u._id));
     } else if (scope === 'department' && dept) {
       targetUsers = usersStore.find().filter(u => 
         u.department === dept && (targetRole ? u.role === targetRole : u.role === 'student')

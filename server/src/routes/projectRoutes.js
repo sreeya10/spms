@@ -5,6 +5,7 @@ import {
   getProjectById,
   updateProject,
   deleteProject,
+  removeProjectByFaculty,
   addTeamMember,
   removeTeamMember
 } from '../controllers/projectController.js';
@@ -20,6 +21,7 @@ router.post('/', authorize('student', 'admin'), logActivity('CREATE_PROJECT', 'P
 router.get('/', getProjects);
 router.get('/:id', getProjectById);
 router.put('/:id', logActivity('UPDATE_PROJECT', 'Project'), updateProject);
+router.delete('/:id/faculty-remove', authorize('faculty', 'admin'), logActivity('FACULTY_REMOVE_PROJECT', 'Project'), removeProjectByFaculty);
 router.delete('/:id', logActivity('DELETE_PROJECT', 'Project'), deleteProject);
 
 router.post('/:id/members', logActivity('ADD_TEAM_MEMBER', 'TeamMember'), addTeamMember);

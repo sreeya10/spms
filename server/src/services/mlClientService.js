@@ -118,28 +118,53 @@ const runFallbackML = (metrics) => {
   }
 
   if (commits < 5) {
+    const sev = daysToDeadline < 7 ? 'Critical' : (daysToDeadline < 18 ? 'High' : 'Medium');
     risks.push({
-      severity: daysToDeadline < 14 ? 'Critical' : 'High',
+      severity: sev,
       factor: 'Incipient Development Volume',
-      description: `Only ${commits} commits recorded for this project.`,
-      impact: 'Insufficient code history to verify student contributions.'
+      description: `Only ${commits} commit(s) recorded on GitHub. Regular commits and feature branches are recommended ahead of evaluation.`,
+      impact: 'Insufficient version control history to verify student contribution progression.'
     });
     flags.push('FLAG_LOW_VOLUME');
+  }
+
+  if (metrics.has_tests === false) {
+    risks.push({
+      severity: daysToDeadline < 14 ? 'High' : 'Medium',
+      factor: 'Missing Automated Test Suite',
+      description: 'No automated unit tests (e.g. Jest, Vitest, PyTest) detected in repository structure.',
+      impact: 'Code verification and regression prevention cannot be validated automatically.'
+    });
+    flags.push('FLAG_NO_TESTS');
   }
 
   let riskLevel = 'Low';
   const critCount = risks.filter(r => r.severity === 'Critical').length;
   const highCount = risks.filter(r => r.severity === 'High').length;
+  const medCount = risks.filter(r => r.severity === 'Medium').length;
 
-  if (critCount >= 1 || readinessScore < 35.0) riskLevel = 'Critical';
-  else if (highCount >= 2 || readinessScore < 55.0) riskLevel = 'High';
-  else if (highCount === 1 || readinessScore < 75.0) riskLevel = 'Medium';
+  if (critCount >= 1) {
+    riskLevel = 'Critical';
+  } else if (highCount >= 2) {
+    riskLevel = 'High';
+  } else if (highCount === 1) {
+    riskLevel = daysToDeadline <= 14 ? 'High' : 'Medium';
+  } else if (medCount >= 2) {
+    riskLevel = 'Medium';
+  } else if (medCount === 1) {
+    riskLevel = 'Low';
+  }
+
+  const riskExplanation = risks.length > 0
+    ? risks.map(r => `${r.factor} (${r.severity}): ${r.description}`).join('. ')
+    : 'No significant development risks detected. Activity and structure meet milestone expectations.';
 
   return {
     project_id: metrics.project_id,
     readiness_score: readinessScore,
     risk_level: riskLevel,
-    confidence_score: 0.90,
+    risk_explanation: riskExplanation,
+    confidence_score: 0.85,
     breakdown: {
       commit_activity_score: Number(commitScore.toFixed(1)),
       collaboration_equity_score: Number(collabScore.toFixed(1)),

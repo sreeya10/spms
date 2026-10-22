@@ -114,6 +114,7 @@ export const getProjects = async (req, res) => {
         totalCommits: repo ? repo.totalCommits : 0,
         readinessScore: latestSnapshot ? latestSnapshot.readinessScore : null,
         riskLevel: latestSnapshot ? latestSnapshot.riskLevel : null,
+        lifecycleStatus: latestSnapshot?.lifecycleStatus || (p.status === 'completed' ? 'Completed' : 'In Progress'),
         teamCount: members.length
       };
     });
@@ -221,11 +222,13 @@ export const deleteProject = async (req, res) => {
 
     const isLeader = project.leaderId === req.user.id;
     const isAdmin = req.user.role === 'admin';
+    const isSupervisor = project.facultySupervisorId === req.user.id;
+    const isFaculty = req.user.role === 'faculty' && (isSupervisor || project.department === req.user.department);
 
-    if (!isLeader && !isAdmin) {
+    if (!isLeader && !isAdmin && !isFaculty) {
       return res.status(403).json({
         success: false,
-        message: 'Only the project leader or administrator can delete a project.'
+        message: 'Only the project leader, assigned supervisor, authorized faculty, or administrator can remove a project.'
       });
     }
 
@@ -243,10 +246,65 @@ export const deleteProject = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: 'Project and associated data deleted successfully.'
+      message: `Project "${project.title}" and associated data were removed successfully.`
     });
   } catch (err) {
     return res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+/**
+ * Faculty-specific project removal endpoint with strict role and department validation.
+ * Students are explicitly forbidden from accessing this operation.
+ */
+export const removeProjectByFaculty = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const project = projectsStore.findById(id);
+    if (!project) {
+      return res.status(404).json({ success: false, message: 'Project not found.' });
+    }
+
+    // Role check: Only faculty and admin are authorized
+    if (req.user.role !== 'faculty' && req.user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Forbidden. Students are not authorized to perform faculty-only removal operations.'
+      });
+    }
+
+    // If faculty, ensure supervisor or department alignment
+    if (req.user.role === 'faculty') {
+      const isSupervisor = project.facultySupervisorId === req.user.id;
+      const isSameDept = project.department && req.user.department &&
+        project.department.trim().toLowerCase() === req.user.department.trim().toLowerCase();
+      if (!isSupervisor && !isSameDept) {
+        return res.status(403).json({
+          success: false,
+          message: 'Faculty can only remove projects assigned to them or within their department.'
+        });
+      }
+    }
+
+    // Safely remove project
+    projectsStore.findByIdAndDelete(project._id);
+
+    // Safely clean up dependent data (team members, repo, metric snapshots)
+    const members = teamMembersStore.find({ projectId: project._id });
+    members.forEach(m => teamMembersStore.findByIdAndDelete(m._id));
+
+    const repo = repoDataStore.findOne({ projectId: project._id });
+    if (repo) repoDataStore.findByIdAndDelete(repo._id);
+
+    const snapshots = snapshotsStore.find({ projectId: project._id });
+    snapshots.forEach(s => snapshotsStore.findByIdAndDelete(s._id));
+
+    return res.status(200).json({
+      success: true,
+      message: `Project "${project.title}" and associated repository connections, analysis records, and team assignments have been removed.`
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: `Failed to remove project: ${err.message}` });
   }
 };
 

@@ -43,9 +43,6 @@ export const Login = () => {
     } else if (role === 'faculty') {
       setEmail('faculty@vit.ac.in');
       setPassword('Password123');
-    } else if (role === 'admin') {
-      setEmail('admin@vit.ac.in');
-      setPassword('Password123');
     }
   };
 
@@ -134,7 +131,7 @@ export const Login = () => {
               <Sparkles className="w-3.5 h-3.5 text-amber-500" />
               Quick Fill Demo Logins
             </p>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => setDemoCredentials('student')}
@@ -148,13 +145,6 @@ export const Login = () => {
                 className="px-2 py-2 text-xs font-semibold rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition text-center"
               >
                 Faculty
-              </button>
-              <button
-                type="button"
-                onClick={() => setDemoCredentials('admin')}
-                className="px-2 py-2 text-xs font-semibold rounded-lg bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-200 transition text-center"
-              >
-                Admin / HOD
               </button>
             </div>
             <p className="text-[11px] text-slate-400 mt-2 text-center">

@@ -85,7 +85,7 @@ export const AdminDashboard = () => {
   };
 
   const downloadProjectPdf = (projectId) => {
-    const token = localStorage.getItem('spms_token');
+    const token = sessionStorage.getItem('spms_token') || localStorage.getItem('spms_token');
     window.open(`/api/v1/reports/project/${projectId}/pdf?token=${token}`, '_blank');
   };
 

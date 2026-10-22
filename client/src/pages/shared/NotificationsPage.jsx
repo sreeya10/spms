@@ -47,12 +47,13 @@ export const NotificationsPage = () => {
 
   const getTypeIcon = (type) => {
     switch (type) {
+      case 'risk_alert':
+      case 'alert':
+        return <AlertTriangle className="w-4 h-4 text-rose-600" />;
       case 'review':
         return <Clock className="w-4 h-4 text-indigo-600" />;
       case 'deadline':
         return <Calendar className="w-4 h-4 text-amber-600" />;
-      case 'alert':
-        return <AlertTriangle className="w-4 h-4 text-rose-600" />;
       default:
         return <Info className="w-4 h-4 text-blue-600" />;
     }
@@ -104,24 +105,37 @@ export const NotificationsPage = () => {
                     n.isRead ? 'bg-white' : 'bg-indigo-50/30'
                   }`}
                 >
-                  <div className="flex items-start gap-3.5">
+                  <div className="flex items-start gap-3.5 flex-1">
                     <div className="p-2 rounded-xl bg-slate-100 shrink-0 mt-0.5">
                       {getTypeIcon(n.type)}
                     </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
                         <span className="font-bold text-slate-900 text-sm">{n.title}</span>
+                        {n.projectTitle && (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">
+                            {n.projectTitle}
+                          </span>
+                        )}
+                        {n.severity && (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 border border-rose-200">
+                            {n.severity} Risk
+                          </span>
+                        )}
                         <span className="text-[10px] uppercase font-extrabold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
-                          {n.type || 'Notice'}
+                          {n.type === 'risk_alert' ? 'Risk Alert' : (n.type || 'Notice')}
                         </span>
                         {!n.isRead && (
                           <span className="w-2 h-2 rounded-full bg-indigo-600"></span>
                         )}
                       </div>
-                      <p className="text-xs text-slate-600 leading-relaxed">{n.message}</p>
-                      <p className="text-[11px] text-slate-400 mt-2">
-                        {new Date(n.createdAt).toLocaleString()}
-                      </p>
+                      <p className="text-xs text-slate-600 leading-relaxed whitespace-pre-line">{n.message}</p>
+                      <div className="flex items-center gap-3 text-[11px] text-slate-400 mt-2">
+                        {n.senderName && (
+                          <span>From: Prof. {n.senderName}</span>
+                        )}
+                        <span>{new Date(n.createdAt).toLocaleString()}</span>
+                      </div>
                     </div>
                   </div>
 

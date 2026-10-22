@@ -1,4 +1,4 @@
-﻿# Environment variables and secrets
+# Environment variables and secrets
 .env
 .env.*
 !.env.example
@@ -52,3 +52,8 @@ client/theme-backup-20261018-204500/
 *-safety*
 **/*-backup*
 **/*-safety*
+
+# Separate projects / debug dumps
+calculator/
+simple_calc.json
+user_repos.json
