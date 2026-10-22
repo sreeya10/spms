@@ -13,7 +13,7 @@ SPMS is organized into three components:
 ## Getting Started
 
 ### 1. Backend Server (server)
-`ash
+`bash
 cd server
 npm install
 npm run dev
@@ -21,7 +21,7 @@ npm run dev
 Runs on http://localhost:5000.
 
 ### 2. Frontend Application (client)
-`ash
+`bash
 cd client
 npm install
 npm run dev
@@ -29,7 +29,7 @@ npm run dev
 Runs on http://localhost:5173.
 
 ### 3. Machine Learning Service (ml-service)
-`ash
+`bash
 cd ml-service
 pip install -r requirements.txt
 uvicorn app.main:app --port 5001 --reload
